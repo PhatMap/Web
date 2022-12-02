@@ -27,7 +27,6 @@
                             <c:if test="${sessionScope.acc==null}"><a href="cart.jsp" class="nav-item nav-link">Shopping Cart</a></c:if>
                             <c:if test="${sessionScope.acc!=null}"><a href="controlCart" class="nav-item nav-link">Shopping Cart</a></c:if>
                             <a href="checkout.jsp" class="nav-item nav-link">Checkout</a>
-                            <a href="contact.jsp" class="nav-item nav-link">Contact</a>
                         </div>
                         <div class="navbar-nav ml-auto py-0 d-none d-lg-block">
                             <c:if test="${sessionScope.acc.issell==true}">

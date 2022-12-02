@@ -129,7 +129,7 @@
                             <h5>Total</h5>
                             <h5>${Odertotal}</h5>
                         </div>
-                        <button class="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To Checkout</button>
+                        <a href="controlBill?total=${Odertotal}"><button class="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To Checkout</button></a>
                     </div>
                 </div>
             </div>

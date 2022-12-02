@@ -6,9 +6,8 @@ package Control;
 
 import DAO.DAO;
 import Entity.Account;
-import Entity.Cart;
 import java.io.IOException;
-import java.util.List;
+import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -20,8 +19,8 @@ import javax.servlet.http.HttpSession;
  *
  * @author TranTrungPhat
  */
-@WebServlet(name = "controlAddToCart", urlPatterns = {"/controlAddToCart"})
-public class controlAddToCart extends HttpServlet {
+@WebServlet(name = "controlBill", urlPatterns = {"/controlBill"})
+public class controlBill extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -38,16 +37,11 @@ public class controlAddToCart extends HttpServlet {
         HttpSession session = request.getSession();
         Account currAccount = (Account) session.getAttribute("acc");
         if(currAccount!=null){
-            String pid = request.getParameter("pid");
-            if(DAO.CheckCartExist(currAccount.getAcid().toString(), pid)){
-                DAO.AddExist(currAccount.getAcid().toString(),pid);
-            }else{
-                DAO.AddToCart(pid,currAccount.getAcid());
-            }
+            String total = request.getParameter("total");
+            DAO.AddNewBill(currAccount.getAcid().toString(),Integer.parseInt(total));
+            response.sendRedirect("succeed.jsp");
+        }else{
             response.sendRedirect("controlCart");
-        }
-        else{
-            response.sendRedirect("login.jsp");
         }
     }
 

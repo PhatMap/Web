@@ -6,6 +6,7 @@ package DAO;
 
 import Context.Utils;
 import Entity.Account;
+import Entity.Bill;
 import Entity.Cart;
 import Entity.Category;
 import Entity.Product;
@@ -38,7 +39,7 @@ public class DAO {
             for(Product p :list){
                 listNeed.add(p);
                 maxPageProduct++;
-                if(maxPageProduct==3) break;
+                if(maxPageProduct==9) break;
             }
             return listNeed;
         } 
@@ -137,23 +138,25 @@ public class DAO {
             try{
                 String jpql="select o from Cart o order by o.id desc";
                 TypedQuery<Cart> query = em.createQuery(jpql,Cart.class);
-                Cart proid = query.getSingleResult();   
-                return proid.getId()+1;
+                query.setMaxResults(1);
+                Cart newCart = query.getSingleResult();
+                return newCart.getId()+1;
             }catch(Exception e){
                 return 1;
             }
         }
         
-        /*public static int getNewBillID(){
+        public static int getNewBillID(){
             try{
-                String jpql="select o from Bill o order by o.idOrder desc";
+                String jpql="select o from Bill o order by o.id desc";
                 TypedQuery<Bill> query = em.createQuery(jpql,Bill.class);
+                query.setMaxResults(1);
                 Bill bill = query.getSingleResult();   
-                return bill.getIdOrder()+1;
+                return bill.getId()+1;
             }catch(Exception e){
                 return 1;
             }
-        }*/
+        }
         
         public static void setAccount(String user,String pass){
             Account newAccount = new Account(DAO.getNewID(),user,pass,false,false);
@@ -308,20 +311,25 @@ public class DAO {
                     trans.rollback();
             }       
        }
-       /*public static void AddNewBill(int uid,List<Cart> cart){
-           String detail ="";
-           Bill newBill = new Bill(DAO.getNewBillID(),uid,detail);
-           long today = System.currentTimeMillis();
+       public static void AddNewBill(String uid,int total){
+           List<Cart> cart = DAO.getUserCart(uid);
+           String detail="";
+           for (Cart o : cart) {
+               detail  += o.getName() + " " + o.getAmount() + " " + o.getTotal()+"  "; 
+               DAO.RemoveFromCart(o.getPid().toString(),uid);
+           }
+           String datetime = new SimpleDateFormat("yyyy/MM/dd_HH:mm:ss").format(Calendar.getInstance().getTime());
+           Bill newBill = new Bill(DAO.getNewBillID(),Integer.parseInt(uid),detail,datetime,total);
             try{
                 trans.begin();
-                em.persist(newProduct);
+                em.persist(newBill);
                 trans.commit();
             }catch(Exception e){
                 trans.rollback();
             }
-       }*/
+            
+       }
        public static void main(String[] args) {
-           String timeStamp = new SimpleDateFormat("yyyy/MM/dd_HH:mm:ss").format(Calendar.getInstance().getTime());
-           System.out.println(timeStamp);
+           System.out.println(DAO.getNewCartID());
     }
 }
